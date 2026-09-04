@@ -1,0 +1,33 @@
+replicaCount: 2
+
+image:
+  repository: hello
+  tag: v1
+  pullPolicy: IfNotPresent
+
+message: "Hello"
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  port: 80
+  targetPort: 8080
+
+# Off by default (beat 1: no DB, /count is per-Pod in-memory — see
+# ../values-with-db.yaml and ../values-with-pvc.yaml for beats 2 and 3).
+db:
+  enabled: false
+  image:
+    repository: postgres
+    tag: "16"
+  user: hello
+  database: hello
+  # Leave empty to auto-generate one (see templates/db-secret.yaml) — it's
+  # kept stable across upgrades via `lookup`, so it survives switching from
+  # emptyDir to a PVC without breaking auth against already-written data.
+  password: ""
+  persistence:
+    enabled: false
+    size: 1Gi
+    storageClassName: ""

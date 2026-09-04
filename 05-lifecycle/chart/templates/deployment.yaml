@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  # Explicit on purpose — this is the PPT talking point for this section.
+  # maxUnavailable: 0 means no old (Ready) Pod is torn down until its
+  # replacement is Ready; maxSurge: 1 means at most one extra Pod exists
+  # meanwhile. Combined with readinessProbe below, a broken new image can
+  # never take traffic away from a working old one — see the v3-broken demo.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: {{ .Values.strategy.maxSurge }}
+      maxUnavailable: {{ .Values.strategy.maxUnavailable }}
+  selector:
+    matchLabels:
+      {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "chart.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: {{ include "chart.fullname" . }}-config
+          env:
+            - name: MESSAGE
+              value: {{ .Values.message | quote }}
+            {{- if .Values.db.enabled }}
+            - name: DB_HOST
+              value: {{ include "chart.fullname" . }}-postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: {{ .Values.db.user | quote }}
+            - name: DB_NAME
+              value: {{ .Values.db.database | quote }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "chart.fullname" . }}-db
+                  key: password
+            {{- end }}
+          # v3-broken exits before it ever binds :8080, so this probe is
+          # what turns "the process died" into "Kubernetes never sends it
+          # traffic" — a Pod that never passes it never counts as Ready for
+          # the rollout above, and never receives Service traffic either.
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080

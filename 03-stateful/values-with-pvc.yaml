@@ -1,0 +1,9 @@
+# Beat 3: same shared Postgres, now backed by a PersistentVolumeClaim
+# instead of emptyDir — data survives the Postgres Pod being deleted too.
+replicaCount: 2
+
+db:
+  enabled: true
+  persistence:
+    enabled: true
+    size: 1Gi

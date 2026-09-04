@@ -1,0 +1,35 @@
+replicaCount: 2
+
+image:
+  repository: hello
+  tag: v1
+  pullPolicy: IfNotPresent
+
+message: "Hello"
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  port: 80
+  targetPort: 8080
+
+config:
+  logLevel: info
+
+# On by default, and already on the PVC: by this point in the tutorial the
+# release is already running with a persistent Postgres (03-stateful/values-with-pvc.yaml).
+# `helm upgrade hello ./04-config/chart` must not regress that, or the
+# upgrade would delete the running DB along with its data.
+db:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "16"
+  user: hello
+  database: hello
+  password: ""
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClassName: ""

@@ -1,0 +1,10 @@
+# Non-sensitive config for hello. Just here to be counted in the
+# "17-22 min · 痛点爆发" ls demo — one more file to copy, edit, and
+# keep in sync by hand for every environment (dev/staging/prod).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello-config
+data:
+  LOG_LEVEL: "info"
+  FEATURE_GREETING_EMOJI: "false"

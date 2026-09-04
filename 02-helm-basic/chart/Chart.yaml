@@ -1,0 +1,11 @@
+# Chart name is "hello" on purpose: the fullname helper in _helpers.tpl
+# collapses "<release>-<chart>" down to just "<release>" whenever the
+# release name already contains the chart name. That's what makes
+# `helm install hello1 ...` / `helm install hello2 ...` produce Services
+# literally named hello1 / hello2 — no chart-name suffix to work around.
+apiVersion: v2
+name: hello
+description: Minimal chart for the hello demo app — used to teach chart structure, templating, and multi-release installs.
+type: application
+version: 0.1.0
+appVersion: "v1"

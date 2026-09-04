@@ -1,0 +1,30 @@
+# Default values for the hello chart. Override per environment with
+# `-f values-xxx.yaml`, or ad-hoc for a demo with `--set`.
+
+replicaCount: 2
+
+image:
+  repository: hello
+  tag: v1
+  pullPolicy: IfNotPresent
+
+# Printed by the app alongside its own HOSTNAME — this is what makes
+# `helm install hello1 --set message="Hello 1"` and
+# `helm install hello2 --set message="Hello 2"` visibly different.
+message: "Hello"
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  port: 80
+  targetPort: 8080
+
+# Off by default: routing for the two-release demo is handled by the
+# hand-written ../ingress.yaml instead, so one Ingress can path-route
+# to both hello1 and hello2 at once. This template stays here mainly
+# to show conditional rendering (see `{{- if .Values.ingress.enabled }}`).
+ingress:
+  enabled: false
+  className: nginx
+  host: hello.local

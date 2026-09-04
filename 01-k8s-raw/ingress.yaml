@@ -1,0 +1,22 @@
+# L7 routing for hello. Its host/path differs per environment too
+# (hello.dev.example.com vs hello.example.com, ...) — another file that
+# has to be duplicated and hand-edited for dev/staging/prod.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: hello.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hello
+                port:
+                  number: 80

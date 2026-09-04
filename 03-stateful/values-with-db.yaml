@@ -1,0 +1,8 @@
+# Beat 2: /count moves from per-Pod memory into a shared Postgres —
+# every Pod now sees the same, consistent count. Still backed by emptyDir
+# under the hood, so the data doesn't survive the Postgres Pod being
+# deleted (see values-with-pvc.yaml for beat 3, which fixes that).
+replicaCount: 2
+
+db:
+  enabled: true

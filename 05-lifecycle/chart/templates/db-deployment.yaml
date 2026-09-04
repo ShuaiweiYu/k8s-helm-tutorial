@@ -1,0 +1,54 @@
+{{- if .Values.db.enabled }}
+# Plain label "app: postgres" (not the shared chart.selectorLabels helper)
+# on purpose: it must NOT overlap with the hello Deployment's selector, and
+# it's what "kubectl delete pod -l app=postgres" in the tutorial targets.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}-postgres
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+    app: postgres
+spec:
+  replicas: 1
+  strategy:
+    # A second, stale Postgres Pod must never run alongside the volume's
+    # real owner — recreate instead of rolling.
+    type: Recreate
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: "{{ .Values.db.image.repository }}:{{ .Values.db.image.tag }}"
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.db.user | quote }}
+            - name: POSTGRES_DB
+              value: {{ .Values.db.database | quote }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "chart.fullname" . }}-db
+                  key: password
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: data
+          {{- if .Values.db.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "chart.fullname" . }}-postgres
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- end }}

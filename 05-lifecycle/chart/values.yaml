@@ -1,0 +1,42 @@
+replicaCount: 2
+
+image:
+  repository: hello
+  tag: v1
+  pullPolicy: IfNotPresent
+
+# maxUnavailable: 0 makes the "service never drops a request" promise
+# airtight rather than relying on the 25%-rounds-down-to-0 default at this
+# replica count — worth being explicit about for what this section teaches.
+strategy:
+  maxSurge: 1
+  maxUnavailable: 0
+
+message: "Hello"
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  port: 80
+  targetPort: 8080
+
+config:
+  logLevel: info
+
+# On by default and already on the PVC — by this point in the tutorial the
+# release already has a persistent Postgres running (03-stateful's
+# values-with-pvc.yaml). `helm upgrade hello ./05-lifecycle/chart` must not
+# regress that.
+db:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "16"
+  user: hello
+  database: hello
+  password: ""
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClassName: ""

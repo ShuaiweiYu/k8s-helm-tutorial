@@ -1,0 +1,7 @@
+# See 02-helm-basic/chart/Chart.yaml for why this is named "hello".
+apiVersion: v2
+name: hello
+description: hello chart, evolved with an explicit rolling-update strategy for the upgrade/rollback demo.
+type: application
+version: 0.4.0
+appVersion: "v1"
