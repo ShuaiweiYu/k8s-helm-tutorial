@@ -1,0 +1,13 @@
+# Step 3: ClusterIP Service. Stable virtual IP + DNS name inside
+# the cluster, L4 load balancing across every Pod matching the
+# selector below — that's the Deployment's Pods, nothing else.
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello
+spec:
+  selector:
+    app: hello
+  ports:
+    - port: 80
+      targetPort: 8080

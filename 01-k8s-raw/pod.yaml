@@ -1,0 +1,16 @@
+# Step 1: a standalone Pod. No controller watches it —
+# delete it and it's gone for good. This is why you almost
+# never write a bare Pod in production.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello
+  labels:
+    app: hello-standalone
+spec:
+  containers:
+    - name: hello
+      image: hello:v1
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080

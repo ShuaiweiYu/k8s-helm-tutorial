@@ -1,0 +1,26 @@
+# Step 2 & 3: a Deployment manages a ReplicaSet, which keeps
+# `replicas` Pods running at all times — delete one and a new
+# one takes its place. The Service in service.yaml load-balances
+# across every Pod matching `app: hello`.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello
+  labels:
+    app: hello
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+        - name: hello
+          image: hello:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080

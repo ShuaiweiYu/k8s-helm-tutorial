@@ -1,0 +1,8 @@
+services:
+  hello:
+    build: ../app
+    image: hello:v1
+    ports:
+      - "8080:8080"
+    environment:
+      MESSAGE: "Hello"
