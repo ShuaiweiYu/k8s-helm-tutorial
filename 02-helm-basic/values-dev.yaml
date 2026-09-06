@@ -1,0 +1,6 @@
+# dev environment: one replica, a dev image tag, and a message that makes
+# it obvious which release answered a request.
+# Usage: helm install dev ./chart -f values-dev.yaml
+replicaCount: 1
+
+message: "Hello dev"

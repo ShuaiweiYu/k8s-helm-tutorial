@@ -1,0 +1,6 @@
+# prod environment: same chart, same templates — only these values differ
+# from values-dev.yaml.
+# Usage: helm install prod ./chart -f values-prod.yaml
+replicaCount: 3
+
+message: "Hello prod"

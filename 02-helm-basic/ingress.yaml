@@ -1,7 +1,7 @@
 # Applied directly with kubectl, not part of the chart: one Ingress doing
 # L7 path routing to two Services that both came from the *same* chart,
-# installed twice as releases hello1 / hello2 with different `message`
-# values. /hello1 -> svc/hello1, /hello2 -> svc/hello2.
+# installed twice as releases dev / prod with different values files.
+# /dev -> svc/dev, /prod -> svc/prod.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -12,17 +12,17 @@ spec:
     - host: localhost
       http:
         paths:
-          - path: /hello1
+          - path: /dev
             pathType: Prefix
             backend:
               service:
-                name: hello1
+                name: dev
                 port:
                   number: 80
-          - path: /hello2
+          - path: /prod
             pathType: Prefix
             backend:
               service:
-                name: hello2
+                name: prod
                 port:
                   number: 80
