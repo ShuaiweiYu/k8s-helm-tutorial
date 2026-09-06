@@ -7,8 +7,6 @@ image:
 
 message: "Hello"
 
-nameOverride: ""
-fullnameOverride: ""
 
 service:
   port: 80

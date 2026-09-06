@@ -1,6 +1,4 @@
-# See 02-helm-basic/chart/Chart.yaml for why this is named "hello": it
-# makes the fullname helper collapse "<release>-<chart>" down to just
-# "<release>" for every release used in this tutorial (hello, hello1, hello2).
+# Objects are named after the release; see 02-helm-basic/chart/Chart.yaml.
 apiVersion: v2
 name: hello
 description: hello chart, evolved with an optional Postgres backend for the stateful/PVC demo.

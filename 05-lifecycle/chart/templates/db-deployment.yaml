@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "chart.fullname" . }}-postgres
+  name: {{ .Release.Name }}-postgres
   labels:
     {{- include "chart.labels" . | nindent 4 }}
     app: postgres
@@ -36,7 +36,7 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "chart.fullname" . }}-db
+                  name: {{ .Release.Name }}-db
                   key: password
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
@@ -47,7 +47,7 @@ spec:
         - name: data
           {{- if .Values.db.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ include "chart.fullname" . }}-postgres
+            claimName: {{ .Release.Name }}-postgres
           {{- else }}
           emptyDir: {}
           {{- end }}

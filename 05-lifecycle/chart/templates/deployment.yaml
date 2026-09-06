@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "chart.fullname" . }}
+  name: {{ .Release.Name }}
   labels:
     {{- include "chart.labels" . | nindent 4 }}
 spec:
@@ -32,13 +32,13 @@ spec:
             - containerPort: 8080
           envFrom:
             - configMapRef:
-                name: {{ include "chart.fullname" . }}-config
+                name: {{ .Release.Name }}-config
           env:
             - name: MESSAGE
               value: {{ .Values.message | quote }}
             {{- if .Values.db.enabled }}
             - name: DB_HOST
-              value: {{ include "chart.fullname" . }}-postgres
+              value: {{ .Release.Name }}-postgres
             - name: DB_PORT
               value: "5432"
             - name: DB_USER
@@ -48,7 +48,7 @@ spec:
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "chart.fullname" . }}-db
+                  name: {{ .Release.Name }}-db
                   key: password
             {{- end }}
           # v3-broken exits before it ever binds :8080, so this probe is

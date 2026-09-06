@@ -13,9 +13,6 @@ image:
 # `helm install hello2 --set message="Hello 2"` visibly different.
 message: "Hello"
 
-nameOverride: ""
-fullnameOverride: ""
-
 service:
   port: 80
   targetPort: 8080
