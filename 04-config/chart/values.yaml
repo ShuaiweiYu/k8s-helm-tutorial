@@ -9,6 +9,13 @@ message: "Hello"
 
 
 service:
+  # NodePort, not ClusterIP: this chapter curls /count from the host over
+  # and over to show the counter jumping between Pods, and a ClusterIP
+  # Service is only reachable from inside the cluster. The port is pinned
+  # so the tutorial can name one URL; leave it empty for a random one in
+  # the 30000-32767 range.
+  type: NodePort
+  nodePort: 30080
   port: 80
   targetPort: 8080
 
