@@ -16,6 +16,12 @@ message: "Hello"
 
 
 service:
+  # NodePort, same as the previous two sections: the upgrade demo is watched
+  # from the host, by curling / over and over while Pods roll. The port is
+  # pinned so the tutorial can name one URL; leave it empty for a random one
+  # in the 30000-32767 range.
+  type: NodePort
+  nodePort: 30080
   port: 80
   targetPort: 8080
 
